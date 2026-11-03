@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="GDL Companies — My First SIM Card. A permanent day counter since 3 November 2006, 7:03 PM (Asia/Dhaka).">
+  <title>GDL Companies — My First SIM Card</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="stage" id="stage">
+    <div class="flipper" id="flipper">
+
+      <!-- FRONT -->
+      <section class="face front" id="front" aria-label="Front of the phone">
+        <div class="speaker" aria-hidden="true"></div>
+
+        <div class="screen">
+          <div class="status"><span class="curvy">Curvy1</span></div>
+          <p class="brand">GDL COMPANIES</p>
+          <p class="title">MY FIRST SIM CARD</p>
+
+          <div class="counter" id="counter" role="img" aria-label="Days elapsed">
+            <svg id="digits" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 238 92" preserveAspectRatio="xMidYMid meet" focusable="false" aria-hidden="true"></svg>
+          </div>
+          <p class="unit" id="unit">DAYS ELAPSED</p>
+          <noscript><p class="nojs">Turn on JavaScript to see the day count.</p></noscript>
+        </div>
+
+        <p class="plate">GDL COMPANIES</p>
+
+        <div class="nav" aria-hidden="true">
+          <span class="soft"></span>
+          <span class="ring"><span class="ok"></span></span>
+          <span class="soft end"></span>
+        </div>
+
+        <div class="pad">
+          <button type="button" class="key" aria-label="1">1</button>
+          <button type="button" class="key" aria-label="2">2</button>
+          <button type="button" class="key" aria-label="3">3</button>
+          <button type="button" class="key" aria-label="4">4</button>
+          <button type="button" class="key" aria-label="5">5</button>
+          <button type="button" class="key" aria-label="6">6</button>
+          <button type="button" class="key" aria-label="7">7</button>
+          <button type="button" class="key" aria-label="8">8</button>
+          <button type="button" class="key" aria-label="9">9</button>
+          <button type="button" class="key" aria-label="Star">*</button>
+          <button type="button" class="key" aria-label="0">0</button>
+          <button type="button" class="key" aria-label="Hash">#</button>
+        </div>
+
+        <div class="ports" aria-hidden="true">
+          <span class="jack" title="Headphone jack"></span>
+          <span class="usbc" title="Type-C charging port"></span>
+        </div>
+      </section>
+
+      <!-- BACK -->
+      <section class="face back" id="back" aria-label="Back of the phone">
+        <div class="cam-module" aria-hidden="true">
+          <span class="lens" title="Camera"></span>
+          <span class="flash" title="Flashlight"></span>
+        </div>
+        <div class="back-brand">
+          <p>GDL COMPANIES</p>
+          <span class="bar" aria-hidden="true"></span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <button type="button" class="flip" id="flip" aria-pressed="false">Flip to back</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
