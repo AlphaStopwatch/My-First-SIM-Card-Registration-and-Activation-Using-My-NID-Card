@@ -5,20 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
   <meta name="color-scheme" content="dark">
+  <meta name="description" content="ALPHA Infinite Day Counter — my SIM card and NID journey. One starting moment. Infinite days.">
   <title>ALPHA — Infinite Day Counter</title>
-  <meta name="description" content="One moment. Endless days.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="stage">
-    <h1 class="title">ALPHA</h1>
-    <p class="subtitle">INFINITE DAY COUNTER</p>
+    <h1 class="brand">ALPHA</h1>
+    <p class="title">INFINITE DAY COUNTER</p>
 
     <div class="counter" role="timer" aria-live="off">
-      <div class="number" id="days" aria-label="Elapsed days">0</div>
-      <div class="unit">DAYS</div>
+      <span class="glow" aria-hidden="true"></span>
+      <span id="days" class="days" aria-label="Total elapsed days">0</span>
     </div>
+
+    <p class="unit">DAYS</p>
   </main>
+
+  <p class="journey">My SIM card &amp; NID journey</p>
+
+  <noscript>
+    <p class="journey">Enable JavaScript to see the day count.</p>
+  </noscript>
 
   <script src="script.js"></script>
 </body>

@@ -1,66 +1,46 @@
 (function () {
   "use strict";
 
-  // Fixed forever: 3 November 2006, 7:03:00 PM, Asia/Dhaka (UTC+06:00).
-  // An ISO string with an explicit offset is one exact instant, so the result
-  // is identical on every device regardless of its own time zone.
-  var START_MS = BigInt(Date.parse("2006-11-03T19:03:00+06:00"));
-  var DAY_MS = 86400000n;
-  var MAX_WAIT = 60000; // re-check at least once a minute (covers sleep and clock changes)
+  // Permanent starting moment: 3 November 2026, 7:03:00 PM, Asia/Dhaka (UTC+06:00).
+  // Defined once, never modified, never replaced by "now".
+  var START_ISO = "2026-11-03T19:03:00+06:00";
+  var START_MS = Date.parse(START_ISO);
+
+  var MS_PER_DAY = 86400000n; // BigInt: no digit limit, no overflow, no truncation.
+  var REFRESH_MS = 30000;     // Refresh the *display* only; the value is always recomputed from START_MS.
 
   var el = document.getElementById("days");
   var lastText = "";
-  var timer = null;
 
-  // Whole elapsed days, computed from the real clock. BigInt means no overflow, ever.
-  function elapsedDays(nowMs) {
-    var diff = nowMs - START_MS;
-    if (diff < 0n) return 0n; // never negative
-    return diff / DAY_MS;
+  // Complete elapsed days since the fixed start, derived purely from timestamps.
+  function elapsedDays() {
+    var diff = Date.now() - START_MS;
+    if (!(diff > 0)) return 0n;                // never negative (also guards NaN)
+    return BigInt(Math.floor(diff)) / MS_PER_DAY;
   }
 
-  function group(big) {
-    return big.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  // Thousands separators without locale dependence or Number limits.
+  function format(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  function render(first) {
-    var now = BigInt(Date.now());
-    var days = elapsedDays(now);
-    var text = group(days);
-
-    if (text !== lastText) {
-      el.textContent = text;
-      el.setAttribute("aria-label", text + " days");
-      // Digit-weighted width: commas are narrower than digits.
-      var commas = (text.match(/,/g) || []).length;
-      el.style.setProperty("--n", String(text.length - commas + commas * 0.5));
-
-      if (!first) {
-        el.classList.remove("tick");
-        void el.offsetWidth; // restart the animation
-        el.classList.add("tick");
-      }
-      lastText = text;
-    }
-
-    // Sleep until the next day boundary, but never longer than MAX_WAIT.
-    var next = START_MS + (days + 1n) * DAY_MS;
-    var wait = Number(next - now);
-    if (!(wait > 0)) wait = 1000;
-    wait = Math.min(wait + 50, MAX_WAIT);
-
-    clearTimeout(timer);
-    timer = setTimeout(function () { render(false); }, wait);
+  function render() {
+    var text = format(elapsedDays());
+    if (text === lastText) return;             // avoid needless DOM work
+    lastText = text;
+    el.textContent = text;
+    el.style.setProperty("--chars", String(text.length));
   }
 
-  // Timers are throttled or paused in background tabs and during sleep,
-  // so recalculate from the real clock the moment the page is visible again.
+  render();
+  setInterval(render, REFRESH_MS);
+
+  // Recompute immediately whenever the page becomes active again
+  // (reopened, un-backgrounded, restored from bfcache, woken from sleep).
   document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) render(false);
+    if (!document.hidden) render();
   });
-  window.addEventListener("focus", function () { render(false); });
-  window.addEventListener("pageshow", function () { render(false); });
-  window.addEventListener("online", function () { render(false); });
-
-  render(true);
+  window.addEventListener("pageshow", render);
+  window.addEventListener("focus", render);
+  window.addEventListener("online", render);
 })();

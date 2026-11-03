@@ -1,151 +1,174 @@
 :root {
   --black: #000000;
+  --red: #d9112f;
+  --red-deep: #8f0a1f;
+  --purple: #7c3aed;
   --white: #ffffff;
-  --soft-white: #f2eef2;
-  --red: #c4001d;
-  --red-deep: #8a0014;
-  --purple: #7b3fe4;
-  --muted: #9a8f9e;
+  --muted: rgba(255, 255, 255, 0.62);
+  --font: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
-
-html, body {
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html,
+body {
   width: 100%;
   height: 100%;
-  overflow: hidden;
   background: var(--black);
   color: var(--white);
+  font-family: var(--font);
+  overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  font-family: "Inter", "Helvetica Neue", "Segoe UI", Roboto, system-ui, -apple-system, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  position: relative;
-}
-
-/* Soft red + purple atmosphere behind the number */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse 60% 38% at 50% 52%, rgba(196, 0, 29, 0.20), transparent 70%),
-    radial-gradient(ellipse 80% 55% at 50% 60%, rgba(123, 63, 228, 0.10), transparent 75%);
-}
-
-.stage {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding:
-    max(2vh, env(safe-area-inset-top))
-    max(4vw, env(safe-area-inset-right))
-    max(2vh, env(safe-area-inset-bottom))
-    max(4vw, env(safe-area-inset-left));
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+  /* Very faint purple floor-light, kept sparing */
+  background:
+    radial-gradient(ellipse 60% 28% at 50% 108%, rgba(124, 58, 237, 0.16), transparent 70%),
+    var(--black);
 }
 
-.title {
-  margin: 0;
-  font-size: clamp(1.1rem, 3.2vmin, 2rem);
-  font-weight: 600;
-  letter-spacing: 0.7em;
-  padding-left: 0.7em; /* balances trailing letter-spacing so text stays centered */
-  color: var(--white);
-}
-
-.subtitle {
-  margin: 0.7em 0 0;
-  font-size: clamp(0.6rem, 1.7vmin, 0.95rem);
-  font-weight: 400;
-  letter-spacing: 0.42em;
-  padding-left: 0.42em;
-  color: var(--muted);
-}
-
-.counter {
+.stage {
   width: 100%;
-  margin-top: clamp(1.2rem, 5vh, 3.5rem);
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+  gap: clamp(0.4rem, 1.6vh, 1rem);
 }
 
-.number {
-  --n: 4; /* digit-weighted length, set from script.js */
-  font-size: min(calc(90vw / (var(--n) * 0.6)), 36vh, 24rem);
-  line-height: 1;
-  font-weight: 300;
-  font-variant-numeric: tabular-nums lining-nums;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  color: var(--white);
-  text-shadow:
-    0 0 0.06em rgba(255, 255, 255, 0.55),
-    0 0 0.22em rgba(196, 0, 29, 0.75),
-    0 0 0.55em rgba(138, 0, 20, 0.55),
-    0 0 1em rgba(123, 63, 228, 0.30);
-  animation: breathe 6s ease-in-out infinite;
-}
-
-.number.tick {
-  animation: tick 1.2s ease-out, breathe 6s ease-in-out 1.2s infinite;
-}
-
-.unit {
-  margin-top: 0.9em;
-  font-size: clamp(1rem, 3.4vmin, 2rem);
-  font-weight: 500;
-  letter-spacing: 0.9em;
-  padding-left: 0.9em;
+.brand {
+  font-size: clamp(1.6rem, 6vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 0.5em;
+  padding-left: 0.5em; /* optically balances trailing letter-spacing */
   color: var(--red);
-  text-shadow: 0 0 14px rgba(196, 0, 29, 0.6);
+  text-shadow: 0 0 22px rgba(217, 17, 47, 0.55);
+}
+
+.title {
+  font-size: clamp(0.72rem, 2.6vw, 1.05rem);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  padding-left: 0.42em;
+  color: var(--muted);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--purple);
+  border-image: linear-gradient(90deg, transparent, var(--purple), transparent) 1;
+}
+
+/* The day counter is the largest element on screen. */
+.counter {
+  position: relative;
+  max-width: 100%;
+  margin-top: clamp(1rem, 5vh, 3rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.days {
+  --chars: 1;
+  position: relative;
+  z-index: 1;
+  display: block;
+  max-width: 100%;
+  font-size: min(34vw, 40vh, calc(150vw / var(--chars)));
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  color: var(--white);
+  white-space: nowrap;
+  text-shadow:
+    0 0 18px rgba(217, 17, 47, 0.7),
+    0 0 60px rgba(217, 17, 47, 0.38);
+}
+
+/* One slow breathing glow — the only ambient motion (opacity only, cheap). */
+.glow {
+  position: absolute;
+  inset: -12% -8%;
+  z-index: 0;
+  background: radial-gradient(ellipse at center, rgba(143, 10, 31, 0.5), transparent 68%);
+  opacity: 0.55;
+  animation: breathe 7s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes breathe {
-  0%, 100% {
-    text-shadow:
-      0 0 0.06em rgba(255, 255, 255, 0.55),
-      0 0 0.22em rgba(196, 0, 29, 0.70),
-      0 0 0.55em rgba(138, 0, 20, 0.50),
-      0 0 1em rgba(123, 63, 228, 0.25);
+  0%,
+  100% {
+    opacity: 0.35;
   }
   50% {
-    text-shadow:
-      0 0 0.06em rgba(255, 255, 255, 0.65),
-      0 0 0.26em rgba(196, 0, 29, 0.90),
-      0 0 0.65em rgba(138, 0, 20, 0.65),
-      0 0 1.1em rgba(123, 63, 228, 0.38);
+    opacity: 0.75;
   }
 }
 
-/* The one moment of motion that carries meaning: the count just advanced */
-@keyframes tick {
-  0%   { transform: scale(1.035); filter: brightness(1.5); }
-  100% { transform: scale(1);     filter: brightness(1); }
+.unit {
+  margin-top: clamp(0.2rem, 1vh, 0.6rem);
+  font-size: clamp(1.1rem, 4.4vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.7em;
+  padding-left: 0.7em;
+  color: var(--red);
+  text-shadow: 0 0 16px rgba(217, 17, 47, 0.5);
 }
 
-/* Landscape phones: tighten the vertical stack */
+.journey {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(0.9rem, env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: clamp(0.62rem, 2vw, 0.8rem);
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.34);
+  pointer-events: none;
+}
+
+/* Landscape phones: tighten vertical rhythm so nothing scrolls. */
 @media (orientation: landscape) and (max-height: 520px) {
-  .title { font-size: 0.95rem; letter-spacing: 0.5em; padding-left: 0.5em; }
-  .subtitle { margin-top: 0.4em; font-size: 0.6rem; }
-  .counter { margin-top: 0.6rem; }
-  .number { font-size: min(calc(90vw / (var(--n) * 0.6)), 44vh, 24rem); }
-  .unit { margin-top: 0.5em; font-size: 0.95rem; letter-spacing: 0.6em; padding-left: 0.6em; }
+  .brand {
+    font-size: clamp(1.1rem, 4vh, 1.6rem);
+  }
+  .title {
+    font-size: 0.65rem;
+    padding-bottom: 0.25rem;
+  }
+  .counter {
+    margin-top: 0.4rem;
+  }
+  .days {
+    font-size: min(30vw, 44vh, calc(150vw / var(--chars)));
+  }
+  .unit {
+    font-size: 1rem;
+  }
+  .journey {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .number, .number.tick { animation: none; }
+  .glow {
+    animation: none;
+    opacity: 0.5;
+  }
 }
